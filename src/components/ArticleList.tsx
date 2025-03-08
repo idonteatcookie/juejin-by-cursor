@@ -64,12 +64,14 @@ const ArticleListWrapper = styled.div`
   padding: 0 20px;
 `;
 
-const ArticleItem = styled.div`
+const ArticleItem = styled.a`
   display: flex;
   padding: 12px 0;
   height: 100px;
   border-bottom: 1px solid #e4e6eb;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 
   &:hover {
     h3 {
@@ -188,8 +190,12 @@ const processCoverImage = (url: string) => {
   return url;
 };
 
-const ArticleList: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('recommend');
+interface ArticleListProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
+
+const ArticleList: React.FC<ArticleListProps> = ({ activeTab, onTabChange }) => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -211,15 +217,20 @@ const ArticleList: React.FC = () => {
 
   // 修改 Tab 切换处理函数
   const handleTabChange = (key: string) => {
-    setActiveTab(key);
+    onTabChange(key); // 通知父组件 Tab 变化
+  };
+
+  // 监听 activeTab 变化，重新加载数据
+  useEffect(() => {
     setArticles([]); // 清空当前文章列表
     setPage(1); // 重置页码
     loadArticles(true); // 重新加载数据
-  };
+  }, [activeTab]); // 添加 activeTab 作为依赖
 
+  // 首次加载数据
   useEffect(() => {
     loadArticles(true);
-  }, []); // 移除 activeTab 依赖，因为我们在 handleTabChange 中处理
+  }, []);
 
   const handleScroll = useCallback((e: Event) => {
     const target = e.target as Document;
@@ -275,7 +286,12 @@ const ArticleList: React.FC = () => {
             const coverImage = processCoverImage(articleInfo.cover_image);
 
             return (
-              <ArticleItem key={article.item_info.article_id}>
+              <ArticleItem 
+                key={article.item_info.article_id}
+                href={`https://juejin.cn/post/${article.item_info.article_id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <ArticleContent hasCover={!!coverImage}>
                   <ArticleTitle>{articleInfo.title}</ArticleTitle>
                   <ArticleBrief>{articleInfo.brief_content}</ArticleBrief>

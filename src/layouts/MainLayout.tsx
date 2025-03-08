@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Sidebar from './components/Sidebar';
 import ArticleList from '../components/ArticleList';
@@ -29,13 +29,34 @@ const RightSidebarWrapper = styled.div`
 `;
 
 const MainLayout: React.FC = () => {
+  // 添加一个 key 来强制重新渲染 ArticleList
+  const [articleListKey, setArticleListKey] = useState(0);
+  // 控制当前选中的 Tab
+  const [activeTab, setActiveTab] = useState('recommend');
+
+  // 处理左侧菜单点击
+  const handleCategoryClick = () => {
+    setArticleListKey(prev => prev + 1); // 强制重新渲染文章列表
+    setActiveTab('recommend'); // 重置为推荐 Tab
+  };
+
+  // 处理 Tab 切换
+  const handleTabChange = (tab: string) => {
+    setArticleListKey(prev => prev + 1); // 强制重新渲染文章列表
+    setActiveTab(tab);
+  };
+
   return (
     <LayoutContainer>
       <LeftSidebarWrapper>
-        <Sidebar />
+        <Sidebar onCategoryClick={handleCategoryClick} />
       </LeftSidebarWrapper>
       <MainContent>
-        <ArticleList />
+        <ArticleList 
+          key={articleListKey}
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+        />
       </MainContent>
       <RightSidebarWrapper>
         <RightSidebar />

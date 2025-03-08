@@ -50,7 +50,11 @@ interface Category {
   category_url: string;
 }
 
-const Sidebar = () => {
+interface SidebarProps {
+  onCategoryClick: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onCategoryClick }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeId, setActiveId] = useState('comprehensive'); // 默认选中综合
 
@@ -82,6 +86,7 @@ const Sidebar = () => {
 
   const handleMenuClick = (id: string) => {
     setActiveId(id);
+    onCategoryClick(); // 通知父组件菜单项被点击
   };
 
   const renderMenuItem = (id: string, name: string, showDot?: boolean, categoryUrl?: string) => (

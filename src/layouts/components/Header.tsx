@@ -167,11 +167,78 @@ const UserAvatar = styled.img`
   cursor: pointer;
 `;
 
+const NotificationDropdownWrapper = styled.div`
+  width: 165px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+`;
+
+const NotificationMenuItem = styled.div`
+  height: 40px;
+  line-height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+  color: #1d2129;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:hover {
+    background-color: #f4f5f5;
+  }
+`;
+
+const NotificationCount = styled.span`
+  font-size: 13px;
+  color: #8a919f;
+`;
+
 const Header = () => {
   const creatorItems = [
     { key: 'write', label: '写文章' },
     { key: 'create', label: '发沸点' },
     { key: 'record', label: '写笔记' },
+  ];
+
+  const notificationItems = [
+    {
+      key: 'comment',
+      label: (
+        <NotificationMenuItem>
+          评论
+          <NotificationCount>99+</NotificationCount>
+        </NotificationMenuItem>
+      ),
+    },
+    {
+      key: 'like',
+      label: (
+        <NotificationMenuItem>
+          赞和收藏
+          <NotificationCount>99+</NotificationCount>
+        </NotificationMenuItem>
+      ),
+    },
+    {
+      key: 'follow',
+      label: (
+        <NotificationMenuItem>
+          新增关注
+          <NotificationCount>99+</NotificationCount>
+        </NotificationMenuItem>
+      ),
+    },
+    {
+      key: 'system',
+      label: (
+        <NotificationMenuItem>
+          系统通知
+          <NotificationCount>99+</NotificationCount>
+        </NotificationMenuItem>
+      ),
+    },
   ];
 
   return (
@@ -218,9 +285,22 @@ const Header = () => {
               <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-2.29-5.57a1.41 1.41 0 0 0 1.42-1.41c0-.78-.64-1.41-1.42-1.41-.78 0-1.42.63-1.42 1.41 0 .78.64 1.41 1.42 1.41zm4.58 0a1.41 1.41 0 0 0 1.42-1.41c0-.78-.64-1.41-1.42-1.41-.78 0-1.42.63-1.42 1.41 0 .78.64 1.41 1.42 1.41zM12 6.92c-2.33 0-4.23 1.89-4.23 4.23h8.46c0-2.34-1.9-4.23-4.23-4.23z"/>
             </svg>
           </VIPIcon>
-          <Badge count={99} size="small">
-            <BellOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
-          </Badge>
+          <Dropdown
+            menu={{ items: notificationItems }}
+            placement="bottomRight"
+            trigger={['hover']}
+            dropdownRender={(menu) => (
+              <NotificationDropdownWrapper>
+                {menu}
+              </NotificationDropdownWrapper>
+            )}
+          >
+            <span>
+              <Badge count={99} size="small">
+                <BellOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
+              </Badge>
+            </span>
+          </Dropdown>
           <UserAvatar 
             src="https://p6-passport.byteacctimg.com/img/user-avatar/eda8490a0609d437f24c116bf72df379~180x180.awebp" 
             alt="user avatar"

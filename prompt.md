@@ -54,5 +54,8 @@
 - 中间的文章列表模块  @ArticleList.tsx 宽度为720px，左侧的菜单栏  @LeftSidebar.tsx 宽度为180px，左侧菜单栏和中间文章列表的间距为20px，中间文章列表和@RightSidebar.tsx 的间距也是20px。请修改整体布局 @MainLayout.tsx 帮我实现
 -  可以设置 @Sidebar.tsx 的宽度为180px
 -  优化头部导航栏，标题字体大小为14px，字体颜色为灰色，选中的标题项展示为蓝色字体，不要有其他的高亮样式。在 AI codeing的右上角展示红色的徽章，内容为 NEW
--  
 
+
+-  每次点击中间文章列表的Tab时，都需要重新加载文章列表数据。点击左侧菜单时，也需要重新加载文章列表数据，并且把选中Tab重置为推荐
+-  点击文章列表中的每一项时，跳转链接 https://juejin.cn/post/{item_info.article_id} 
+-  当鼠标划过 @Header.tsx 右侧的消息时，弹出下拉菜单，宽度为165px，效果如下
