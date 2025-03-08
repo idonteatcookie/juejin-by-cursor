@@ -5,7 +5,9 @@ export const fetchCategoryBriefs = async () => {
 };
 
 export const fetchArticleList = async (page: number = 1) => {
-  // 在实际项目中这里会带上分页参数请求服务器
+  // 添加1秒延时
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
   const response = await fetch('/mock/recommend_all_feed.json');
   const data = await response.json();
   return data;

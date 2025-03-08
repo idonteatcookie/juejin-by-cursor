@@ -25,8 +25,13 @@
 
 
 - 帮我实现文章列表区域，这部分顶部有两个 Tab 项，“推荐” 和 “最新”，默认选中为“推荐”。文章列表的数据来自 @recommend_all_feed.json 请通过mock接口的形式获取数据。点击 Tab 菜单需要刷新列表。
-对于每一个文章项，如果文章存在封面，取item_info.article_info.cover_image，则在左侧展示文章信息，右侧展示文章封面，如果没有封面，则只展示文章信息，文章信息有三行，第一行展示文章标题，对应字段item_info.article_info.title，第二行展示文章简介，对应字段item_info.article_info.brief_content，第三行展示文章作者，对应字段item_info.article_info.user_name,文章阅读量，一个小眼睛图标和阅读数据，取item_info.article_info.view_count，注意阅读超过请显示为例如1.3k的格式。然后是点赞数，取item_info.article_info.digg_count。第三行的右侧显示文章标签，取item_info.tags中的tag_name，可能有多个，需要依次展示。
+对于每一个文章项，如果文章存在封面，取item_info.article_info.cover_image，则在左侧展示文章信息，右侧展示文章封面，如果没有封面，则只展示文章信息，文章信息有三行，第一行展示文章标题，对应字段item_info.article_info.title，第二行展示文章简介，对应字段item_info.article_info.brief_content，第三行展示文章作者，对应字段item_info.author_user_info.user_name,文章阅读量，一个小眼睛图标和阅读数据，取item_info.article_info.view_count，注意阅读超过请显示为例如1.3k的格式。然后是点赞数，取item_info.article_info.digg_count。第三行的右侧显示文章标签，取item_info.tags中的tag_name，可能有多个，需要依次展示。
 列表需要有无限加载的功能，每次滑动到列表最底部，需要通过接口再次获取下一批文章列表。（并附上截图）
-
 - 页面控制台报错了（附报错信息）
 
+
+- 文章列表的第四项图片没没有展示出来，能帮检查一下
+- 需要在文章每一项的第三行开头展示作者名称，取item_info.author_user_info.user_name字段，文章列表模块的整体宽度需要小一些，Tab标题的高度为50px，选中的Tab为黑色，未选中为灰色，选中Tab后直接切换，不需要滑动动画。图片的高度要和文章说明部分一样高。每个文章卡片的高度为100px。请参考截图样式实现。
+- 两个Tab标题的距离近一些，选中的Tab下方中间展示15px x 3px 的蓝色小横条。
+- 我们给mock接口加上1s的延时来更好的模拟接口请求的效果。在切换文章列表或者刚打开页面的时候，文章列表处于加载状态，需要展示为图片中效果
+- 在切换Tab的时候，也需要重新加载数据，需要展示Loading效果

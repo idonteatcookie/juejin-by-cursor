@@ -4,18 +4,21 @@ import styled from 'styled-components';
 import { EyeOutlined, LikeOutlined } from '@ant-design/icons';
 import { fetchArticleList } from '../utils/mock';
 import { formatNumber } from '../utils/format';
+import ArticleSkeleton from './ArticleSkeleton';
 
 const ListContainer = styled.div`
   flex: 1;
   background: #fff;
   border-radius: 4px;
   min-width: 700px;
+  max-width: 820px;
 `;
 
 const TabsWrapper = styled(Tabs)`
   .ant-tabs-nav {
     margin: 0;
-    padding: 16px 20px 0;
+    height: 50px;
+    padding: 0 20px;
     &::before {
       border-bottom: 1px solid #e4e6eb;
     }
@@ -24,22 +27,36 @@ const TabsWrapper = styled(Tabs)`
   .ant-tabs-tab {
     padding: 12px 0;
     font-size: 16px;
-    margin: 0 24px 0 0;
+    margin: 0 12px 0 0;
+    color: #86909c;
+    position: relative;
     
     &.ant-tabs-tab-active {
       .ant-tabs-tab-btn {
-        color: #1e80ff;
+        color: #1d2129;
         font-weight: 500;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 15px;
+        height: 3px;
+        background: #1e80ff;
+        border-radius: 1px;
       }
     }
 
     &:hover {
-      color: #1e80ff;
+      color: #1d2129;
     }
   }
 
   .ant-tabs-ink-bar {
-    background: #1e80ff;
+    display: none;
   }
 `;
 
@@ -50,6 +67,7 @@ const ArticleListWrapper = styled.div`
 const ArticleItem = styled.div`
   display: flex;
   padding: 12px 0;
+  height: 100px;
   border-bottom: 1px solid #e4e6eb;
   cursor: pointer;
 
@@ -62,6 +80,9 @@ const ArticleItem = styled.div`
 
 const ArticleContent = styled.div<{ hasCover: boolean }>`
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   ${props => props.hasCover ? 'margin-right: 20px;' : ''}
 `;
 
@@ -69,19 +90,24 @@ const ArticleTitle = styled.h3`
   font-size: 16px;
   font-weight: 700;
   color: #1d2129;
-  margin: 0 0 8px 0;
+  margin: 0;
   line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 `;
 
 const ArticleBrief = styled.p`
   font-size: 13px;
   color: #86909c;
-  margin: 0 0 8px 0;
+  margin: 4px 0;
   line-height: 1.6;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  flex: 1;
 `;
 
 const ArticleInfo = styled.div`
@@ -89,6 +115,12 @@ const ArticleInfo = styled.div`
   align-items: center;
   font-size: 13px;
   color: #4e5969;
+`;
+
+const AuthorName = styled.div`
+  color: #4e5969;
+  font-weight: 500;
+  margin-right: 20px;
 `;
 
 const ArticleMeta = styled.div`
@@ -123,6 +155,7 @@ const CoverImage = styled.img`
   height: 80px;
   border-radius: 4px;
   object-fit: cover;
+  align-self: center;
 `;
 
 interface Article {
@@ -142,6 +175,18 @@ interface Article {
     }>;
   };
 }
+
+// 添加一个处理图片URL的函数
+const processCoverImage = (url: string) => {
+  if (!url) return '';
+  
+  // 如果URL包含 '~tplv-k3u1fbpfcp-jj-mark' 这样的标记，需要处理
+  if (url.includes('~tplv-k3u1fbpfcp-jj-mark')) {
+    return url.split('#')[0]; // 移除URL中的hash部分
+  }
+  
+  return url;
+};
 
 const ArticleList: React.FC = () => {
   const [activeTab, setActiveTab] = useState('recommend');
@@ -164,9 +209,17 @@ const ArticleList: React.FC = () => {
     }
   }, [page]);
 
+  // 修改 Tab 切换处理函数
+  const handleTabChange = (key: string) => {
+    setActiveTab(key);
+    setArticles([]); // 清空当前文章列表
+    setPage(1); // 重置页码
+    loadArticles(true); // 重新加载数据
+  };
+
   useEffect(() => {
     loadArticles(true);
-  }, [activeTab]);
+  }, []); // 移除 activeTab 依赖，因为我们在 handleTabChange 中处理
 
   const handleScroll = useCallback((e: Event) => {
     const target = e.target as Document;
@@ -194,50 +247,73 @@ const ArticleList: React.FC = () => {
     <ListContainer>
       <TabsWrapper
         activeKey={activeTab}
-        onChange={key => setActiveTab(key)}
+        onChange={handleTabChange}
+        animated={false}
         items={[
           { key: 'recommend', label: '推荐' },
           { key: 'newest', label: '最新' },
         ]}
       />
       <ArticleListWrapper>
-        {articles.map(article => {
-          const articleInfo = article?.item_info?.article_info;
-          const tags = article?.item_info?.tags || [];
-          
-          if (!articleInfo) return null;
+        {loading && articles.length === 0 ? (
+          // 初始加载或切换 Tab 时显示骨架屏
+          <>
+            <ArticleSkeleton />
+            <ArticleSkeleton />
+            <ArticleSkeleton />
+            <ArticleSkeleton />
+            <ArticleSkeleton />
+          </>
+        ) : (
+          articles.map(article => {
+            const articleInfo = article?.item_info?.article_info;
+            const authorInfo = article?.item_info?.author_user_info;
+            const tags = article?.item_info?.tags || [];
+            
+            if (!articleInfo || !authorInfo) return null;
 
-          return (
-            <ArticleItem key={article.item_info.article_id}>
-              <ArticleContent hasCover={!!articleInfo.cover_image}>
-                <ArticleTitle>{articleInfo.title}</ArticleTitle>
-                <ArticleBrief>{articleInfo.brief_content}</ArticleBrief>
-                <ArticleInfo>
-                  <ArticleMeta>{articleInfo.user_name}</ArticleMeta>
-                  <ArticleMeta>
-                    <EyeOutlined />
-                    {formatNumber(articleInfo.view_count)}
-                  </ArticleMeta>
-                  <ArticleMeta>
-                    <LikeOutlined />
-                    {articleInfo.digg_count}
-                  </ArticleMeta>
-                  <ArticleTags>
-                    {tags.map(tag => (
-                      <Tag key={tag.tag_name}>{tag.tag_name}</Tag>
-                    ))}
-                  </ArticleTags>
-                </ArticleInfo>
-              </ArticleContent>
-              {articleInfo.cover_image && (
-                <CoverImage 
-                  src={articleInfo.cover_image} 
-                  alt={articleInfo.title}
-                />
-              )}
-            </ArticleItem>
-          );
-        })}
+            const coverImage = processCoverImage(articleInfo.cover_image);
+
+            return (
+              <ArticleItem key={article.item_info.article_id}>
+                <ArticleContent hasCover={!!coverImage}>
+                  <ArticleTitle>{articleInfo.title}</ArticleTitle>
+                  <ArticleBrief>{articleInfo.brief_content}</ArticleBrief>
+                  <ArticleInfo>
+                    <AuthorName>{authorInfo.user_name}</AuthorName>
+                    <ArticleMeta>
+                      <EyeOutlined />
+                      {formatNumber(articleInfo.view_count)}
+                    </ArticleMeta>
+                    <ArticleMeta>
+                      <LikeOutlined />
+                      {articleInfo.digg_count}
+                    </ArticleMeta>
+                    <ArticleTags>
+                      {tags.map(tag => (
+                        <Tag key={tag.tag_name}>{tag.tag_name}</Tag>
+                      ))}
+                    </ArticleTags>
+                  </ArticleInfo>
+                </ArticleContent>
+                {coverImage && (
+                  <CoverImage 
+                    src={coverImage}
+                    alt={articleInfo.title}
+                    onError={(e) => {
+                      const img = e.target as HTMLImageElement;
+                      img.style.display = 'none';
+                    }}
+                  />
+                )}
+              </ArticleItem>
+            );
+          })
+        )}
+        {loading && articles.length > 0 && (
+          // 加载更多时显示骨架屏
+          <ArticleSkeleton />
+        )}
       </ArticleListWrapper>
     </ListContainer>
   );
