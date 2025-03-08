@@ -4,8 +4,7 @@ import { fetchCategoryBriefs } from '../../utils/mock';
 import CategoryIcon from '../../components/CategoryIcon';
 
 const SidebarWrapper = styled.div`
-  width: 156px;
-  margin-right: 20px;
+  width: 180px;
   background: #fff;
   border-radius: 4px;
   overflow: hidden;

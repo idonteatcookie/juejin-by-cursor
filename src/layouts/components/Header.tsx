@@ -62,17 +62,22 @@ const MenuItem = styled.span<{ active?: boolean }>`
   }
 
   ${props => props.active && `
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 16px;
-      right: 16px;
-      height: 2px;
-      background: #1e80ff;
-      border-radius: 1px;
-    }
+    color: #1e80ff;
   `}
+`;
+
+const NewBadge = styled.span`
+  position: absolute;
+  top: 14px;
+  right: 0;
+  padding: 0 6px;
+  height: 16px;
+  line-height: 16px;
+  background: #f64242;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #fff;
+  transform: scale(0.9);
 `;
 
 const SearchWrapper = styled.div`
@@ -180,12 +185,15 @@ const Header = () => {
         </Logo>
         <NavMenu>
           <MenuItem active>首页</MenuItem>
-          <MenuItem>AI Coding</MenuItem>
+          <MenuItem>
+            AI Coding
+            <NewBadge>NEW</NewBadge>
+          </MenuItem>
           <MenuItem>沸点</MenuItem>
           <MenuItem>课程</MenuItem>
           <MenuItem>直播</MenuItem>
           <MenuItem>活动</MenuItem>
-          <MenuItem>AI测题</MenuItem>
+          <MenuItem>AI刷题</MenuItem>
           <MenuItem>APP</MenuItem>
           <MenuItem>插件</MenuItem>
         </NavMenu>

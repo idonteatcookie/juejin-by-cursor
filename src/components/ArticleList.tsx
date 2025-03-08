@@ -10,8 +10,8 @@ const ListContainer = styled.div`
   flex: 1;
   background: #fff;
   border-radius: 4px;
-  min-width: 700px;
-  max-width: 820px;
+  width: 100%;
+  min-width: 0;
 `;
 
 const TabsWrapper = styled(Tabs)`

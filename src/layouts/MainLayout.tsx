@@ -5,32 +5,41 @@ import ArticleList from '../components/ArticleList';
 import RightSidebar from '../components/RightSidebar';
 
 const LayoutContainer = styled.div`
-  max-width: 1440px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 16px 24px;
+  padding: 16px 0;
   display: flex;
+  gap: 20px;
+  justify-content: center;
 `;
 
 const MainContent = styled.div`
-  flex: 1;
-  display: flex;
-  margin: 0 20px;
+  width: 720px;
   min-width: 720px;
-  max-width: 960px;
 `;
 
-const AsideRight = styled.div`
-  width: 240px;
+const LeftSidebarWrapper = styled.div`
+  width: 180px;
+  min-width: 180px;
+`;
+
+const RightSidebarWrapper = styled.div`
+  width: 260px;
+  min-width: 260px;
 `;
 
 const MainLayout: React.FC = () => {
   return (
     <LayoutContainer>
-      <Sidebar />
+      <LeftSidebarWrapper>
+        <Sidebar />
+      </LeftSidebarWrapper>
       <MainContent>
         <ArticleList />
       </MainContent>
-      <RightSidebar />
+      <RightSidebarWrapper>
+        <RightSidebar />
+      </RightSidebarWrapper>
     </LayoutContainer>
   );
 };
