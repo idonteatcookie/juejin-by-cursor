@@ -14,12 +14,14 @@ import {
   HeartOutlined
 } from '@ant-design/icons';
 
-const IconWrapper = styled.span<{ isRanking?: boolean }>`
+const IconWrapper = styled.span`
   margin-right: 12px;
   font-size: 16px;
   display: flex;
   align-items: center;
-  color: ${props => props.isRanking ? '#fcd54c' : 'inherit'};
+  ${props => props.$isRanking && `
+    color: #fcd54c;
+  `}
 `;
 
 const categoryIcons: { [key: string]: React.ReactNode } = {
@@ -45,7 +47,7 @@ const CategoryIcon: React.FC<CategoryIconProps> = ({ categoryUrl, categoryId }) 
   const icon = categoryIcons[categoryUrl || categoryId] || <BookOutlined />;
   const isRanking = categoryId === 'ranking';
   
-  return <IconWrapper isRanking={isRanking}>{icon}</IconWrapper>;
+  return <IconWrapper $isRanking={isRanking}>{icon}</IconWrapper>;
 };
 
 export default CategoryIcon; 

@@ -1,13 +1,14 @@
-import { BrowserRouter as Router } from 'react-router-dom';
-import Layout from './layouts/Layout';
-import './App.css';
+import React from 'react';
+import Header from './layouts/components/Header';
+import MainLayout from './layouts/MainLayout';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <Router>
-      <Layout />
-    </Router>
+    <>
+      <Header />
+      <MainLayout />
+    </>
   );
-}
+};
 
 export default App; 
