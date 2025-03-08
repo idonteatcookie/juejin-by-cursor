@@ -1,0 +1,6 @@
+- 我想仿写一个类似掘金的网站，网站截图为 @screenshot.png 请帮我创建一个react+vite的项目，并完成初始的框架内容
+- 项目无法启动，请帮我提供项目启动的方法
+- 打开http://localhost:5173提示“ 找不到 localhost 的网页”
+- 在终端看到了   VITE v5.4.14  ready in 271 ms 但我打开页面提示 “找不到 localhost 的网页”
+- 终端提示 `...` 但是我无法访问页面
+- 帮我生成 gitignore 文件
