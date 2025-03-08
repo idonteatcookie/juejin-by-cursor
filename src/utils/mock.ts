@@ -11,4 +11,22 @@ export const fetchArticleList = async (page: number = 1) => {
   const response = await fetch('/mock/recommend_all_feed.json');
   const data = await response.json();
   return data;
+};
+
+export const fetchArticleRank = async () => {
+  const response = await fetch('/mock/article_rank.json');
+  const data = await response.json();
+  return data;
+};
+
+export const fetchQualityAuthors = async () => {
+  const response = await fetch('/mock/quality_user.json');
+  const data = await response.json();
+  return data;
+};
+
+export const fetchHotTopics = async () => {
+  const response = await fetch('/mock/list_by_hot.json');
+  const data = await response.json();
+  return data;
 }; 

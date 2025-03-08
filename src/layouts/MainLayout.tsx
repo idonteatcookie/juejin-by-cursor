@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Sidebar from './components/Sidebar';
 import ArticleList from '../components/ArticleList';
+import RightSidebar from '../components/RightSidebar';
 
 const LayoutContainer = styled.div`
   max-width: 1440px;
@@ -29,9 +30,7 @@ const MainLayout: React.FC = () => {
       <MainContent>
         <ArticleList />
       </MainContent>
-      <AsideRight>
-        {/* 右侧边栏内容 */}
-      </AsideRight>
+      <RightSidebar />
     </LayoutContainer>
   );
 };
