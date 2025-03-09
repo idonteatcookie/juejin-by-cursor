@@ -167,32 +167,46 @@ const UserAvatar = styled.img`
   cursor: pointer;
 `;
 
-const NotificationDropdownWrapper = styled.div`
-  width: 165px;
+const NotificationMenu = styled.div`
+  width: 180px;
   background: #fff;
   border-radius: 4px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 8px 0;
 `;
 
-const NotificationMenuItem = styled.div`
-  height: 40px;
-  line-height: 40px;
-  padding: 0 16px;
+const NotificationItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
   font-size: 14px;
   color: #1d2129;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
+  transition: all 0.3s;
+  position: relative;
+  
   &:hover {
     background-color: #f4f5f5;
   }
+  
+  &:not(:last-child) {
+    margin-bottom: 4px;
+  }
 `;
 
-const NotificationCount = styled.span`
-  font-size: 13px;
-  color: #8a919f;
+const NotificationBadge = styled.span`
+  position: absolute;
+  right: 16px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 5px;
+  line-height: 16px;
+  text-align: center;
+  background: #ee4b51;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
 `;
 
 const Header = () => {
@@ -202,44 +216,35 @@ const Header = () => {
     { key: 'record', label: '写笔记' },
   ];
 
-  const notificationItems = [
-    {
-      key: 'comment',
-      label: (
-        <NotificationMenuItem>
-          评论
-          <NotificationCount>99+</NotificationCount>
-        </NotificationMenuItem>
-      ),
-    },
-    {
-      key: 'like',
-      label: (
-        <NotificationMenuItem>
-          赞和收藏
-          <NotificationCount>99+</NotificationCount>
-        </NotificationMenuItem>
-      ),
-    },
-    {
-      key: 'follow',
-      label: (
-        <NotificationMenuItem>
-          新增关注
-          <NotificationCount>99+</NotificationCount>
-        </NotificationMenuItem>
-      ),
-    },
-    {
-      key: 'system',
-      label: (
-        <NotificationMenuItem>
-          系统通知
-          <NotificationCount>99+</NotificationCount>
-        </NotificationMenuItem>
-      ),
-    },
+  // 消息通知数据
+  const notifications = [
+    { key: 'comment', label: '评论', count: 2 },
+    { key: 'like', label: '赞和收藏', count: 99 },
+    { key: 'fans', label: '新增粉丝', count: 99 },
+    { key: 'message', label: '私信', count: 0 },
+    { key: 'system', label: '系统通知', count: 1 },
   ];
+
+  // 计算总通知数
+  const totalCount = notifications.reduce((sum, item) => sum + item.count, 0);
+
+  // 创建通知菜单
+  const notificationMenu = {
+    items: notifications.map(item => ({
+      key: item.key,
+      label: (
+        <NotificationItem>
+          {item.label}
+          {item.count > 0 && (
+            <NotificationBadge>
+              {item.count > 99 ? '99+' : item.count}
+            </NotificationBadge>
+          )}
+        </NotificationItem>
+      )
+    })),
+    style: { width: 180 }
+  };
 
   return (
     <StyledHeader>
@@ -285,21 +290,22 @@ const Header = () => {
               <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-2.29-5.57a1.41 1.41 0 0 0 1.42-1.41c0-.78-.64-1.41-1.42-1.41-.78 0-1.42.63-1.42 1.41 0 .78.64 1.41 1.42 1.41zm4.58 0a1.41 1.41 0 0 0 1.42-1.41c0-.78-.64-1.41-1.42-1.41-.78 0-1.42.63-1.42 1.41 0 .78.64 1.41 1.42 1.41zM12 6.92c-2.33 0-4.23 1.89-4.23 4.23h8.46c0-2.34-1.9-4.23-4.23-4.23z"/>
             </svg>
           </VIPIcon>
-          <Dropdown
-            menu={{ items: notificationItems }}
+          <Dropdown 
+            menu={notificationMenu}
             placement="bottomRight"
             trigger={['hover']}
-            dropdownRender={(menu) => (
-              <NotificationDropdownWrapper>
-                {menu}
-              </NotificationDropdownWrapper>
-            )}
+            overlayStyle={{ minWidth: '180px' }}
           >
-            <span>
-              <Badge count={99} size="small">
-                <BellOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
-              </Badge>
-            </span>
+            <Badge 
+              count={totalCount > 99 ? '99+' : totalCount} 
+              size="small"
+              style={{ 
+                backgroundColor: '#ee4b51',
+                fontWeight: 'bold'
+              }}
+            >
+              <BellOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
+            </Badge>
           </Dropdown>
           <UserAvatar 
             src="https://p6-passport.byteacctimg.com/img/user-avatar/eda8490a0609d437f24c116bf72df379~180x180.awebp" 
